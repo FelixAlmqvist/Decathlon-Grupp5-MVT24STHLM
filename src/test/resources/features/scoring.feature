@@ -1,6 +1,6 @@
 Feature: Check for correct calculation for scores
 
-  Scenario:
+  Scenario: Succesful entry of 1 contestant
     Given That i am on the correct page on "chrome"
     When  I fill in "Anna"
     And   I pick "LongJump"
