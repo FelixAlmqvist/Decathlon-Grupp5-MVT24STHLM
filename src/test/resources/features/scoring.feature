@@ -15,9 +15,16 @@ Feature: Check for correct calculation for scores
     And   I put in my "<Result>"
     Then  I submit and verify "<TotalScore>"
 
-    Examples:
-      | Browser | Name | Sport | Result | TotalScore |
-      |         | anna | 100m  | 300    | 66         |
+    Examples:  #min edge version var inte korrekt för att kunna öppna med selenium
+      | Browser | Name   | Sport    | Result | TotalScore |
+      | Chrome  | Andrea | 100m     | 12     | 651        |
+      | Chrome  | Andrea | 400m     | 25     | 2968       |
+      | Chrome  | Andrea | longjump | 456    | 3269       |
+      | Chrome  | Andrea | shotput  | 17     | 4182       |
+      | Firefox | Adam   | 100m     | 16     | 89         |
+      | Firefox | Adam   | 400m     | 96     | 89         |
+      | Firefox | Adam   | longjump | 275    | 128        |
+      | Firefox | Adam   | shotput  | 22     | 1353       |
 
 
 

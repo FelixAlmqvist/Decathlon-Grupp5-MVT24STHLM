@@ -7,13 +7,17 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.openqa.selenium.By;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.time.Duration;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -22,11 +26,12 @@ public class ScoringStepDefs {
 
     WebDriver driver;
     boolean decathlon = true;
+    private String name_ = "";
 
     @After
     public void tearDown() {
         assert driver != null;
-        //driver.quit();
+        driver.quit();
     }
 
     @Given("That i am on the correct page on {string}")
@@ -53,14 +58,15 @@ public class ScoringStepDefs {
     @When("I fill in {string}")
     public void fillInName(String name) {
         //eventually add a check for if already in standings
+        name_ = name;
         driver.findElement(By.cssSelector("#name")).sendKeys(name);
         driver.findElement(By.cssSelector("#add")).click();
-        driver.findElement(By.cssSelector("#name2")).sendKeys(name);
     }
 
     @And("I pick {string}")
     public void fillInSport(String sport) {
         WebElement tmp = driver.findElement(By.cssSelector("#event"));
+        driver.findElement(By.cssSelector("#name2")).sendKeys(name_);
         Select dropdown = new Select(tmp);;
         if (decathlon) {
             switch (sport.toLowerCase()) {
@@ -111,22 +117,41 @@ public class ScoringStepDefs {
 
     @Then("I submit and verify {string}")
     public void SubmitAndVerify(String totalScore) {
+        String tmp = findTotalscoreOfCompetitor(name_, "0");
         driver.findElement(By.cssSelector("#save")).click();
-
-        assertEquals(totalScore, findTotalscoreOfCompetitor(driver.findElement(By.cssSelector("#name2")).getText()));
+        waitForRefresh(driver,By.cssSelector("#standings tr"));
+        assertEquals(totalScore, findTotalscoreOfCompetitor(name_, tmp));
     }
 
-    public String findTotalscoreOfCompetitor(String name){
-        List<WebElement> standings = driver.findElements(By.cssSelector("#standings tr"));
-        for(WebElement cell : standings)
-        {
-            if(cell.getText().contains(name))
-            {
+    public String findTotalscoreOfCompetitor(String name, String oldScore){
+        while(true) {
+            List<WebElement> standings = driver.findElements(By.cssSelector("#standings tr"));
+            try{
+                for (WebElement cell : standings) {
 
-                List<WebElement> cells = driver.findElements(By.tagName("td"));
-                return cells.getLast().getText();
+
+                    if (cell.getText().contains(name)) {
+                        String s = cell.getText();
+                        String[] sArray = s.split(" ");
+                        if (sArray[sArray.length - 1].equals(oldScore)) {
+                            waitForRefresh(driver, By.cssSelector("#standings tr"));
+                        }
+
+                        return sArray[sArray.length - 1];
+                    }
+                }
+
+            fail("Competitor not found: " + name_);
+            return null;
+            }catch (StaleElementReferenceException e) {
+                System.out.println("standings uppdaterades under sökning av element");
             }
         }
-        return null;
+    }
+
+    private static void waitForRefresh(WebDriver driver, By by){
+        WebElement element = (new WebDriverWait(driver, Duration.ofSeconds(5))).until(
+                            ExpectedConditions.refreshed(
+                                    ExpectedConditions.visibilityOfElementLocated(by)));
     }
 }
