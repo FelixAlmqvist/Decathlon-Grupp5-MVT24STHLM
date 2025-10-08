@@ -62,33 +62,53 @@ public class ScoringStepDefs {
         driver.findElement(By.cssSelector("#add")).click();
     }
 
-    @And("I pick {string}")
+
+    @And("I pick competition {string}")
+    public void chooseCompetition(String competition) {
+        WebElement tmp = driver.findElement(By.cssSelector("#mode"));
+        Select dropdown = new Select(tmp);
+        if(competition.equalsIgnoreCase("hepta")){
+            dropdown.selectByValue("HEP");
+            decathlon = false;
+        }else if(competition.equalsIgnoreCase("deca")){
+            dropdown.selectByValue("DEC");
+            decathlon = true;
+        }
+    }
+
+    @And("I pick sport {string}")
     public void fillInSport(String sport) {
         WebElement tmp = driver.findElement(By.cssSelector("#event"));
         driver.findElement(By.cssSelector("#name2")).sendKeys(name_);
-        Select dropdown = new Select(tmp);;
+        Select dropdown = new Select(tmp);
         if (decathlon) {
             switch (sport.toLowerCase()) {
                 case "100m":
                     dropdown.selectByValue("100m");
                     break;
                 case "110mhurdles":
+                    dropdown.selectByValue("110mHurdles");
                     break;
                 case "400m":
                     dropdown.selectByValue("400m");
                     break;
                 case "1500m":
+                    dropdown.selectByValue("1500m");
                     break;
-                case "discusthrow":
+                case "discus":
+                    dropdown.selectByValue("discus");
                     break;
                 case "highjump":
+                    dropdown.selectByValue("highJump");
                     break;
-                case "javelinthrow":
+                case "javelin":
+                    dropdown.selectByValue("javelin");
                     break;
                 case "longjump":
                     dropdown.selectByValue("longJump");
                     break;
                 case "polevault":
+                    dropdown.selectByValue("poleVault");
                     break;
                 case "shotput":
                     dropdown.selectByValue("shotPut");
@@ -97,9 +117,28 @@ public class ScoringStepDefs {
                     System.out.println("No sport under: " + sport + " in Decathlon");
             }
 
-        } else { //no way to choose here yet revist once availible
-            switch (sport) {
-                case "100m":
+        } else {
+            switch (sport.toLowerCase()) {
+                case "100mhurdles":
+                    dropdown.selectByValue("100mHurdles");
+                    break;
+                case "200m":
+                    dropdown.selectByValue("200m");
+                    break;
+                case "800m":
+                    dropdown.selectByValue("800m");
+                    break;
+                case "highjump":
+                    dropdown.selectByValue("highJump");
+                    break;
+                case "javelin":
+                    dropdown.selectByValue("javelin");
+                    break;
+                case "longjump":
+                    dropdown.selectByValue("longJump");
+                    break;
+                case "shotput":
+                    dropdown.selectByValue("shotPut");
                     break;
 
             }
@@ -115,11 +154,12 @@ public class ScoringStepDefs {
     }
 
     @Then("I submit and verify {string}")
-    public void SubmitAndVerify(String totalScore) {
-        String tmp = findTotalscoreOfCompetitor(name_, "0");
+    public void SubmitAndVerify(String addedScore) {
+        String oldScore = findTotalscoreOfCompetitor(name_, "0");
         driver.findElement(By.cssSelector("#save")).click();
         waitForRefresh(driver,By.cssSelector("#standings tr"));
-        assertEquals(totalScore, findTotalscoreOfCompetitor(name_, tmp));
+        String newTotal = findTotalscoreOfCompetitor(name_, oldScore);
+        assertEquals(addedScore,String.valueOf(Integer.parseInt(newTotal)-Integer.parseInt(oldScore)));
     }
 
     public String findTotalscoreOfCompetitor(String name, String oldScore){
@@ -153,4 +193,5 @@ public class ScoringStepDefs {
                             ExpectedConditions.refreshed(
                                     ExpectedConditions.visibilityOfElementLocated(by)));
     }
+
 }
