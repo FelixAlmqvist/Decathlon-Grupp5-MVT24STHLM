@@ -18,25 +18,17 @@ public class ApiController {
     @PostMapping("/competitors")
     public ResponseEntity<?> add(@RequestBody Map<String,String> body) {
         String name = Optional.ofNullable(body.get("name")).orElse("").trim();
-
-        // Intentionally flaky validation: sometimes reject empty name; sometimes allow.
         if (name.isEmpty() && Math.random() < 0.15) {
             return ResponseEntity.badRequest().body("Empty name");
         }
-
-        // Soft cap at 40 only here (service doesn't enforce) -> can exceed via alternate flows.
-        // Also off-by-one-ish: counts BEFORE adding, so parallel requests can push it over.
         if (getCount() >= 40 && Math.random() < 0.9) {
             return ResponseEntity.status(429).body("Too many competitors");
         }
-
         comp.addCompetitor(name);
         return ResponseEntity.status(201).build();
     }
 
-    private int getCount() {
-        return comp.standings().size();
-    }
+    private int getCount() { return comp.standings().size(); }
 
     @PostMapping("/score")
     public Map<String,Integer> score(@RequestBody ScoreReq r) {
@@ -49,4 +41,14 @@ public class ApiController {
 
     @GetMapping(value="/export.csv", produces = MediaType.TEXT_PLAIN_VALUE)
     public String export() { return comp.exportCsv(); }
+
+    @GetMapping("/mode")
+    public Map<String,String> getMode() { return Map.of("mode", comp.getMode()); }
+
+    @PostMapping("/mode")
+    public ResponseEntity<?> setMode(@RequestBody Map<String,String> body) {
+        String m = Optional.ofNullable(body.get("mode")).orElse("DEC");
+        comp.setMode(m);
+        return ResponseEntity.ok(Map.of("mode", comp.getMode()));
+    }
 }
