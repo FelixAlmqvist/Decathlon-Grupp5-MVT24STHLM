@@ -29,8 +29,9 @@ public class ScoringStepDefs {
 
     @After
     public void tearDown() {
-        assert driver != null;
-        driver.quit();
+        if (driver != null) {
+            driver.quit();
+        }
     }
 
     @Given("That i am on the correct page on {string}")
