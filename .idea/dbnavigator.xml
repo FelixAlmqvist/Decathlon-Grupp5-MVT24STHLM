@@ -4,16 +4,6 @@
     <mappings />
     <preferences />
   </component>
-<<<<<<< HEAD
-  <component name="DBNavigator.Project.DatabaseAssistantManager">
-    <assistants />
-  </component>
-=======
-  <component name="DBNavigator.Project.DataEditorManager">
-    <record-view-column-sorting-type value="BY_INDEX" />
-    <value-preview-text-wrapping value="false" />
-    <value-preview-pinned value="false" />
-  </component>
   <component name="DBNavigator.Project.DatabaseAssistantManager">
     <assistants />
   </component>
@@ -23,10 +13,6 @@
     <show-object-properties value="true" />
     <loaded-nodes />
   </component>
-  <component name="DBNavigator.Project.DatabaseEditorStateManager">
-    <last-used-providers />
-  </component>
->>>>>>> 717748af2a18814d9e3e976157444cc15668a059
   <component name="DBNavigator.Project.DatabaseFileManager">
     <open-files />
   </component>
