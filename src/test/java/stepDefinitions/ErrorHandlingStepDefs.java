@@ -181,6 +181,7 @@ public class ErrorHandlingStepDefs {
         }
     }
 
+
     @Then("an error message should be displayed informing about invalid characters in name")
     public void anErrorMessageShouldBeDisplayedInformingAboutInvalidCharactersInName() {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
