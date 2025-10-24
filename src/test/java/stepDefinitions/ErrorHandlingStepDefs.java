@@ -1,6 +1,7 @@
 package stepDefinitions;
 
 import io.cucumber.java.After;
+import io.cucumber.java.PendingException;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 import io.cucumber.java.en.Then;
@@ -128,6 +129,85 @@ public class ErrorHandlingStepDefs {
             String standingsText = standings.getText();
             assertFalse(standingsText.contains("-5") || standingsText.contains("abc"),
                     "Invalid result should not appear in standings");
+        }
+    }
+
+    @Then("an error message should be displayed informing about invalid name")
+    public void anErrorMessageShouldBeDisplayedInformingAboutInvalidName() {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+
+        try {
+            // Wait for error message to appear
+            WebElement errorMessage = wait.until(
+                    ExpectedConditions.visibilityOfElementLocated(By.id("error"))
+            );
+
+            assertTrue(errorMessage.isDisplayed(), "Error message should be visible");
+
+            // Check that the error message actually has content about name
+            String messageText = errorMessage.getText().toLowerCase();
+            assertTrue(
+                    messageText.contains("name") ||
+                            messageText.contains("namn") || // Swedish
+                            messageText.contains("empty") ||
+                            messageText.contains("tomt") || // Swedish
+                            messageText.contains("required"),
+                    "Error message should mention name field. Actual message: " + messageText
+            );
+
+        } catch (Exception e) {
+            fail("No error message displayed for invalid name");
+        }
+    }
+
+    @Then("an error message should be displayed informing about multiple invalid values")
+    public void anErrorMessageShouldBeDisplayedInformingAboutMultipleInvalidValues() {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+
+        try {
+            // Wait for error message to appear
+            WebElement errorMessage = wait.until(
+                    ExpectedConditions.visibilityOfElementLocated(By.id("error"))
+            );
+
+            assertTrue(errorMessage.isDisplayed(), "Error message should be visible");
+
+            // Check that the error message actually has content
+            String messageText = errorMessage.getText().toLowerCase();
+            assertFalse(messageText.trim().isEmpty(), "Error message should not be empty");
+
+        } catch (Exception e) {
+            fail("No error message displayed for multiple invalid values");
+        }
+    }
+
+
+    @Then("an error message should be displayed informing about invalid characters in name")
+    public void anErrorMessageShouldBeDisplayedInformingAboutInvalidCharactersInName() {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+
+        try {
+            // Wait for error message to appear
+            WebElement errorMessage = wait.until(
+                    ExpectedConditions.visibilityOfElementLocated(By.id("error"))
+            );
+
+            assertTrue(errorMessage.isDisplayed(), "Error message should be visible");
+
+            // Check that the error message actually has content about invalid characters
+            String messageText = errorMessage.getText().toLowerCase();
+            assertTrue(
+                    messageText.contains("invalid") ||
+                            messageText.contains("character") ||
+                            messageText.contains("tecken") || // Swedish
+                            messageText.contains("special") ||
+                            messageText.contains("name") ||
+                            messageText.contains("namn"), // Swedish
+                    "Error message should mention invalid characters in name. Actual message: " + messageText
+            );
+
+        } catch (Exception e) {
+            fail("No error message displayed for invalid characters in name");
         }
     }
 }
