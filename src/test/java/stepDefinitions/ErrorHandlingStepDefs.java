@@ -21,7 +21,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class ErrorHandlingStepDefs {
 
-    WebDriver driver;
+    private static WebDriver driver;
+
+    public static WebDriver getDriver() {
+        return driver;
+    }
 
     // Helper Method:
     private WebDriverWait getWait() {
