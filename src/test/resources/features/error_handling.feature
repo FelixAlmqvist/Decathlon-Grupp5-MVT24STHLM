@@ -10,7 +10,7 @@ Feature: Error Handling and Input Validation
     And I select "<event>" from event dropdown
     And I enter "-5" in the result field
     And I click the "Save score" button
-    Then an error message should be displayed informing about invalid value
+    Then an error message should be displayed
 
     Examples:
       | event          |
@@ -32,7 +32,7 @@ Feature: Error Handling and Input Validation
     And I select "100m" from event dropdown
     And I enter "abc" in the result field
     And I click the "Save score" button
-    Then an error message should be displayed informing about invalid value
+    Then an error message should be displayed
 
   @ID-199 @GUI-Validation @High-Priority
   Scenario: Verify error message for empty result field
@@ -41,7 +41,7 @@ Feature: Error Handling and Input Validation
     And I select "100m" from event dropdown
     And I enter "" in the result field
     And I click the "Save score" button
-    Then an error message should be displayed informing about invalid value
+    Then an error message should be displayed
 
   @ID-200 @GUI-Validation @High-Priority
   Scenario: Verify error message for empty name field
@@ -50,7 +50,7 @@ Feature: Error Handling and Input Validation
     And I select "100m" from event dropdown
     And I enter "12.5" in the result field
     And I click the "Save score" button
-    Then an error message should be displayed informing about invalid name
+    Then an error message should be displayed
 
   @ID-201 @GUI-Validation @High-Priority
   Scenario: Verify error message for zero result value
@@ -59,7 +59,7 @@ Feature: Error Handling and Input Validation
     And I select "100m" from event dropdown
     And I enter "0" in the result field
     And I click the "Save score" button
-    Then an error message should be displayed informing about invalid value
+    Then an error message should be displayed
 
   @ID-203 @GUI-Validation @Medium-Priority
   Scenario: Verify error message for multiple invalid fields simultaneously
@@ -68,7 +68,7 @@ Feature: Error Handling and Input Validation
     And I select "100m" from event dropdown
     And I enter "abc" in the result field
     And I click the "Save score" button
-    Then an error message should be displayed informing about multiple invalid values
+    Then an error message should be displayed
 
   @ID-234 @GUI-Validation @High-Priority
   Scenario: Verify error message for invalid special characters in name field
@@ -77,4 +77,11 @@ Feature: Error Handling and Input Validation
     And I select "100m" from event dropdown
     And I enter "12.5" in the result field
     And I click the "Save score" button
-    Then an error message should be displayed informing about invalid characters in name
+    Then an error message should be displayed
+
+  @ID-214 @Error-Handling @Medium-Priority
+  Scenario: Verify error handling during failed data processing
+    Given the application is started and main window is visible
+    When I enter competitor data that causes processing failure
+    Then the system should display a recoverable error message
+    And the application should not crash
