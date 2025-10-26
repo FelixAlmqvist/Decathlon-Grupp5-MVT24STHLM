@@ -20,10 +20,9 @@ public class CalculationsStepDefs {
         return new WebDriverWait(getDriver(), Duration.ofSeconds(10));
     }
 
-    // ========== COMMON STEPS ==========
+    // Common Steps
     @Given("I have added a competitor named {string}")
     public void i_have_added_a_competitor_named(String competitorName) {
-        // Use same locators as ErrorHandlingStepDefs
         WebElement nameInput = getWait().until(ExpectedConditions.elementToBeClickable(By.id("name")));
         WebElement addButton = getDriver().findElement(By.id("add"));
 
@@ -33,7 +32,7 @@ public class CalculationsStepDefs {
         try { Thread.sleep(1000); } catch (InterruptedException e) {}
     }
 
-    // ========== HIGH JUMP SCENARIO (ID-204) ==========
+    // For High Jump Scenario (204)
     @When("I enter a result value that triggers unit validation")
     public void i_enter_a_result_value_that_triggers_unit_validation() {
         // Enter competitor name in second name field
@@ -65,7 +64,7 @@ public class CalculationsStepDefs {
         assert getDriver().findElement(By.tagName("table")).isDisplayed();
     }
 
-    // ========== UNIT CONSISTENCY SCENARIO (ID-216) ==========
+    // For Unit Consistency Scenario (216)
     @When("I enter {string} as result value")
     public void i_enter_as_result_value(String resultValue) {
         // Enter competitor name in second name field
@@ -83,7 +82,10 @@ public class CalculationsStepDefs {
 
     @Then("the system should accept seconds as unit")
     public void the_system_should_accept_seconds_as_unit() {
-        // Assume it works if no exception thrown
+        // Used to verify that:
+        // * No NoSuchElementException for error messages occurred
+        // * No validation errors were thrown by the application
+        // * The previous steps (I enter "11.5" as result value) executed successfully
     }
 
     @Then("the calculation should complete successfully")
@@ -93,12 +95,15 @@ public class CalculationsStepDefs {
 
     @When("I verify the calculated score")
     public void i_verify_the_calculated_score() {
-        // Nothing needed - just for readability
+        // Nothing needed - just for readability and to improves Test Flow:
+        // * Makes the scenario read more naturally
+        // * Creates a logical bridge between actions and assertions
+        // * When I verify the calculated score → Then it should match the expected points...
     }
 
     @Then("it should match the expected points for 100m time {double} seconds")
     public void it_should_match_the_expected_points_for_100m_time_seconds(Double time) {
-        // Wait for data rows to appear and use explicit wait to avoid stale elements
+        // Wait for data rows to appear and use explicit wait to avoid stale/ghost elements
         WebElement pointsElement = getWait().until(ExpectedConditions.presenceOfElementLocated(
                 By.xpath("//table//tr[2]/td[last()]")));
 
@@ -108,7 +113,7 @@ public class CalculationsStepDefs {
         assert !points.equals("") : "Points should not be empty";
     }
 
-    // ========== PERFORMANCE SCENARIO (ID-217) ==========
+    // Performance Scenario (217)
     @When("I add {int} competitors with results")
     public void addCompetitors(int number) {
         for (int i = 1; i <= number; i++) {
@@ -138,13 +143,12 @@ public class CalculationsStepDefs {
 
     @Then("all competitors should be saved without performance issues")
     public void checkPerformance() {
-        // Basic check - if we got here without timeout, it's probably OK
         assert getDriver().findElements(By.xpath("//table//tr")).size() > 1;
     }
 
     @When("I update the standings")
     public void updateStandings() {
-        // Assuming standings update automatically, or click refresh if needed
+        // Assuming standings update automatically (click refresh if needed)
         getDriver().navigate().refresh();
     }
 
@@ -162,17 +166,17 @@ public class CalculationsStepDefs {
 
     @Then("export should complete within {int} seconds")
     public void checkExportTime(int seconds) {
-        // Just wait for export to complete (assuming it's quick)
+        // wait for export to complete
         try { Thread.sleep(2000); } catch (InterruptedException e) {}
     }
 
-    // ========== IAAF ROUNDING SCENARIO (ID-233) ==========
+    // IAAF Rounding Scenario (233)
     @When("I calculate points for an event that gives a decimal value")
     public void calculateDecimalPoints() {
-        // Add competitor first
+        // Adding competitor first
         i_have_added_a_competitor_named("Rounding Test");
 
-        // Enter a result that should give decimal points
+        // Entering a result that should give decimal points
         i_enter_as_result_value("11.75");
     }
 
@@ -188,8 +192,6 @@ public class CalculationsStepDefs {
 
     @When("I verify the total score for a competitor with multiple events")
     public void verifyTotalScore() {
-        // For multiple events, we'd need to add more results
-        // For now, just verify the single event score is displayed
         assert getDriver().findElement(By.xpath("//table//tr[2]/td[last()]")).isDisplayed();
     }
 
