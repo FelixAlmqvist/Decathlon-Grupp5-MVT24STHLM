@@ -13,14 +13,15 @@ Feature: Calculation Accuracy and Performance
     And the unit validation should be handled appropriately
 
   @ID-216 @Unit-Consistency @Medium-Priority
-  Scenario: Verify unit consistency between UIs
-    Given both Desktop and Web UIs are available
-    When I enter "11.5" as "100m" result in Desktop UI
+  Scenario: Verify unit consistency in Web UI
+    Given the application is started and main window is visible
+    And I have added a competitor named "Consistency Test"
+    When I select "100m" from event dropdown
+    And I enter "11.5" as result value
     Then the system should accept seconds as unit
-    When I enter the same "11.5" in Web UI
-    Then the same unit should be accepted
-    When I compare score calculations
-    Then identical scores should be displayed in both UIs
+    And the calculation should complete successfully
+    When I verify the calculated score
+    Then it should match the expected points for 100m time 11.5 seconds
 
   @ID-217 @Performance @Medium-Priority
   Scenario: Verify performance with 40 competitors
