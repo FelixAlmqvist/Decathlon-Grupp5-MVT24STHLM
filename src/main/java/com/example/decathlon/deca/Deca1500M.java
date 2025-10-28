@@ -1,44 +1,36 @@
 package com.example.decathlon.deca;
 
 import com.example.decathlon.common.CalcTrackAndField;
-import com.example.decathlon.common.InputResult;
+import com.example.decathlon.common.InvalidResultException;
 
 public class Deca1500M {
 
-	private int score;
-	private double A = 0.03768;
-	private double B = 480;
-	private double C = 1.85;
-	boolean active = true;
+    private int score;
+    private double A = 0.03768;
+    private double B = 480;
+    private double C = 1.85;
 
-	CalcTrackAndField calc = new CalcTrackAndField();
-	InputResult inputResult = new InputResult();
+    CalcTrackAndField calc = new CalcTrackAndField();
 
-	// Calculate the score based on time. All running events.
-	public int calculateResult(double runningTime) {
 
-		while (active) {
+    // Calculate the score based on time. All running events.
+    public int calculateResult(double runningTime)throws InvalidResultException {
 
-			try {
-				// Acceptable values.
-				if (runningTime < 150) {
-					System.out.println("Value too low");
-					runningTime = inputResult.enterResult();
-				} else if (runningTime > 400) {
-					System.out.println("Value too high");
-					runningTime = inputResult.enterResult();
-				} else {
 
-					score = calc.calculateTrack(A, B, C, runningTime);
-					active = false;
-				}
-			} catch (Exception e) {
+        // Acceptable values.
+        if (runningTime < 150) {
+            System.out.println("Value too low");
+            throw new InvalidResultException("Value too low");
 
-				System.out.println("Please enter numbers");
-			}
-		}
-		System.out.println("The result is: " + score);
-		return score;
-	}
+        } else if (runningTime > 400) {
+            System.out.println("Value too high");
+            throw new InvalidResultException("Value too high");
+
+        }
+        score = calc.calculateTrack(A, B, C, runningTime);
+
+        System.out.println("The result is: " + score);
+        return score;
+    }
 
 }

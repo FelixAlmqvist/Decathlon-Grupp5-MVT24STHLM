@@ -5,6 +5,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.*;
 import java.util.Arrays;
+
+import com.example.decathlon.common.InvalidResultException;
 import com.example.decathlon.deca.*;
 import com.example.decathlon.heptathlon.*;
 public class MainGUI {
@@ -72,7 +74,6 @@ public class MainGUI {
 
         frame.add(panel);
         frame.setVisible(true);
-
     }
 
     private void rebuildDisciplineBox() {
@@ -85,7 +86,12 @@ public class MainGUI {
     private class CalculateButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            String name = nameField.getText();
+            String name = nameField.getText().trim();
+            if (name.isEmpty() || !name.matches(".*[A-Za-zÅÄÖåäö].*")) {
+                JOptionPane.showMessageDialog(null, "Please enter a valid name.", "Invalid Name", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
             String discipline = (String) disciplineBox.getSelectedItem();
             String resultText = resultField.getText();
             String comp = (String) modeBox.getSelectedItem();
@@ -125,6 +131,8 @@ public class MainGUI {
                 outputArea.append("Score: " + score + "\n\n");
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(null, "Please enter a valid number for the result.", "Invalid Input", JOptionPane.ERROR_MESSAGE);
+            } catch (InvalidResultException ex) {
+                JOptionPane.showMessageDialog(null, ex.getMessage(), "Invalid Result", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
