@@ -1,44 +1,32 @@
 package com.example.decathlon.deca;
 
 import com.example.decathlon.common.CalcTrackAndField;
-import com.example.decathlon.common.InputResult;
+import com.example.decathlon.common.InvalidResultException;
 
 public class DecaJavelinThrow {
 
-	private int score;
-	private double A = 10.14;
-	private double B = 7;
-	private double C = 1.08;
-	boolean active = true;
-	CalcTrackAndField calc = new CalcTrackAndField();
-	InputResult inputResult = new InputResult();
+    private int score;
+    private double A = 10.14;
+    private double B = 7;
+    private double C = 1.08;
+    CalcTrackAndField calc = new CalcTrackAndField();
 
-	// Calculate the score based on distance and height. Measured in meters.
-	public int calculateResult(double distance) {
+    // Calculate the score based on distance and height. Measured in meters.
+    public int calculateResult(double distance) throws InvalidResultException {
 
-		while (active) {
+        // Acceptable values.
+        if (distance < 0) {
+            System.out.println("Value too low");
+            throw new InvalidResultException("Value too low");
 
-			try {
-				// Acceptable values.
-				if (distance < 0) {
-					System.out.println("Value too low");
-					distance = inputResult.enterResult();
-				} else if (distance > 110) {
-					System.out.println("Value too high");
-					distance = inputResult.enterResult();
+        } else if (distance > 110) {
+            System.out.println("Value too high");
+            throw new InvalidResultException("Value too high");
+        }
+        score = calc.calculateField(A, B, C, distance);
 
-				} else {
-
-					score = calc.calculateField(A, B, C, distance);
-					active = false;
-				}
-			} catch (Exception e) {
-
-				System.out.println("Please enter numbers");
-			}
-		}
-		System.out.println("The result is: " + score);
-		return score;
-	}
+        System.out.println("The result is: " + score);
+        return score;
+    }
 
 }
