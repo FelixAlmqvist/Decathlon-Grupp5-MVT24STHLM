@@ -95,10 +95,10 @@ public class CalculationsStepDefs {
 
     @When("I verify the calculated score")
     public void i_verify_the_calculated_score() {
-        // Nothing needed - just for readability and to improves Test Flow:
+        // Nothing needed - just for readability to improve Test Flow:
         // * Makes the scenario read more naturally
-        // * Creates a logical bridge between actions and assertions
-        // * When I verify the calculated score → Then it should match the expected points...
+        // * Creates a logical bridge between actions and assertions 
+        // (When I verify the calculated score → Then it should match the expected points)
     }
 
     @Then("it should match the expected points for 100m time {double} seconds")
@@ -215,3 +215,4 @@ public class CalculationsStepDefs {
 
 
 }
+
