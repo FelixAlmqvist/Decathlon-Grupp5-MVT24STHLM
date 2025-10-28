@@ -10,7 +10,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class DataManagementStepDefs {  // NO "extends BaseStepDefs"
+public class DataManagementStepDefs {
 
     WebDriver driver;
 
@@ -70,4 +70,5 @@ public class DataManagementStepDefs {  // NO "extends BaseStepDefs"
         }
         button.click();
     }
+
 }
